@@ -1,6 +1,25 @@
 import _ from 'lodash';
 
 window._ = _;
+import $ from 'jquery';
+
+window.JqueryDev = $;
+import * as Popper from '@popperjs/core'
+
+window.Popper = Popper
+
+import "./assets/js/jquery-3.3.1.min"
+import "./assets/js/jquery.cookie"
+import "./assets/vendor/bootstrap-5/js/bootstrap"
+import "./assets/js/main"
+import "./assets/js/color-scheme"
+import "./assets/js/pwa-services"
+
+import "./assets/vendor/chart-js-3.3.1/chart.min"
+import "./assets/vendor/progressbar-js/progressbar.min"
+import "./assets/vendor/swiperjs-6.6.2/swiper-bundle.min"
+
+// import "./assets/js/app"
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -11,9 +30,13 @@ window._ = _;
 import axios from 'axios';
 
 window.axios = axios;
-axios.defaults.withCredentials = true;
+window.axios.defaults.withCredentials = true;
+window.axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-axios.defaults.headers.common['Authorization'] = `Bearer ` + localStorage.getItem('access_token');
+const token = localStorage.getItem('access_token')
+if (token) {
+    window.axios.defaults.headers.common['Authorization'] = `Bearer ` + token
+}
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

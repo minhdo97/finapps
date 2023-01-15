@@ -1,36 +1,76 @@
 <script setup>
 import {reactive} from "vue"
 import {useAuthStore} from "../stores/auth";
-import {useRouter} from "vue-router";
 
 const auth = useAuthStore()
-const router = useRouter()
-const formSubmit = reactive({email: "a@a.com", password: "1"});
+const formSubmit = reactive({email: "a@a.com", password: "1", device_name: navigator.userAgent});
 
 const handleSubmit = async () => {
-    axios.get('/sanctum/csrf-cookie').then(response => {
-        axios.post('login', formSubmit).then(res => {
-            localStorage.setItem('access_token', res.data.access_token)
-            auth.setUser(res.data.user)
-            auth.setAuth()
-        }).then(() => {
-            router.push({name: "home"})
-        })
-    });
+    await auth.login(formSubmit)
 }
 </script>
 <template>
-    <div>Login</div>
+    <div class="row h-100 overflow-auto">
+        <div class="col-12 text-center mb-auto px-0">
+            <header class="header">
+                <div class="row">
+                    <div class="col-auto"></div>
+                    <div class="col">
+                        <div class="logo-small">
+                            <img src="@/assets/img/logo.png" alt="">
+                            <h5>FiMobile</h5>
+                        </div>
+                    </div>
+                    <div class="col-auto"></div>
+                </div>
+            </header>
+        </div>
+        <div class="col-10 col-md-6 col-lg-5 col-xl-3 mx-auto align-self-center text-center py-4">
+            <h1 class="mb-4 text-color-theme">Sign in</h1>
+            <form class="was-validated needs-validation" novalidate @submit.prevent="handleSubmit">
+                <div class="form-group form-floating mb-3 is-valid">
+                    <input type="email" class="form-control" autocomplete="username" v-model="formSubmit.email"
+                           id="email"
+                           placeholder="Email">
+                    <label class="form-control-label" for="email">Email Address</label>
+                </div>
 
-    <form action="" @submit.prevent="handleSubmit">
-        <div>
-            <input type="email" v-model="formSubmit.email">
+                <div class="form-group form-floating is-invalid mb-3">
+                    <input type="password" class="form-control" v-model="formSubmit.password"
+                           autocomplete="current-password" id="password"
+                           placeholder="Password">
+                    <label class="form-control-label" for="password">Password</label>
+                    <button type="button" class="text-danger tooltip-btn" data-bs-toggle="tooltip"
+                            data-bs-placement="left" title="Enter valid Password" id="passworderror">
+                        <i class="bi bi-info-circle"></i>
+                    </button>
+                </div>
+                <p class="mb-3 text-center">
+                    <a href="forgot-password.html" class="">
+                        Forgot your password?
+                    </a>
+                </p>
+
+                <button type="submit" class="btn btn-lg btn-default w-100 mb-4 shadow">
+                    Sign in
+                </button>
+            </form>
+            <p class="mb-2 text-muted">Don't have account?</p>
+            <RouterLink to="register" tag="a">
+                Sign up <i class="bi bi-arrow-right"></i>
+            </RouterLink>
         </div>
-        <div>
-            <input type="password" v-model="formSubmit.password">
+        <div class="col-12 text-center mt-auto">
+            <div class="row justify-content-center footer-info">
+                <div class="col-auto">
+                    <p class="text-muted">Or you can continue with </p>
+                </div>
+                <div class="col-auto ps-0">
+                    <a href="#" class="p-1"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="p-1"><i class="bi bi-google"></i></a>
+                    <a href="#" class="p-1"><i class="bi bi-facebook"></i></a>
+                </div>
+            </div>
         </div>
-        <div>
-            <input type="submit" value="Register">
-        </div>
-    </form>
+    </div>
 </template>

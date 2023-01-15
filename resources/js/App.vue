@@ -1,8 +1,15 @@
+<script setup>
+import {useAuthStore} from "./stores/auth";
+import {onMounted} from "vue";
+
+const authStore = useAuthStore()
+if (authStore.isAuthenticated) {
+    authStore.getUser()
+}
+onMounted(() => {
+
+})
+</script>
 <template>
-    <header>
-        <RouterLink tag="a" :to="{name:'home'}">Home</RouterLink>
-        <RouterLink tag="a" :to="{name:'login'}">Login</RouterLink>
-        <RouterLink tag="a" :to="{name:'register'}">Register</RouterLink>
-    </header>
     <router-view></router-view>
 </template>
